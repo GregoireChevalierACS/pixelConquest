@@ -1,0 +1,15 @@
+D:\pixelConqiest\pixelConquest\bin\Debug\net10.0\pixelConquest.exe
+D:\pixelConqiest\pixelConquest\bin\Debug\net10.0\pixelConquest.deps.json
+D:\pixelConqiest\pixelConquest\bin\Debug\net10.0\pixelConquest.runtimeconfig.json
+D:\pixelConqiest\pixelConquest\bin\Debug\net10.0\pixelConquest.dll
+D:\pixelConqiest\pixelConquest\bin\Debug\net10.0\pixelConquest.pdb
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.GeneratedMSBuildEditorConfig.editorconfig
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.AssemblyInfoInputs.cache
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.AssemblyInfo.cs
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.csproj.CoreCompileInputs.cache
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.sourcelink.json
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.dll
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\refint\pixelConquest.dll
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.pdb
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.genruntimeconfig.cache
+D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\ref\pixelConquest.dll
