@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pixelConquest", "pixelConquest.csproj", "{5E0C1B29-3DC1-96A1-2406-4018FD4E9CB5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E0C1B29-3DC1-96A1-2406-4018FD4E9CB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E0C1B29-3DC1-96A1-2406-4018FD4E9CB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E0C1B29-3DC1-96A1-2406-4018FD4E9CB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E0C1B29-3DC1-96A1-2406-4018FD4E9CB5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8E227016-F2F8-4B4E-BD8C-C874AB00761E}
+	EndGlobalSection
+EndGlobal

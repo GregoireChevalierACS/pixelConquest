@@ -55,8 +55,13 @@ Implémentation envisagée : flood fill depuis les bords — tout pixel neutre n
 
 ## Roadmap d'apprentissage
 
-- [ ] Setup .NET SDK + VS Code
-- [ ] Premier projet console — bases de la syntaxe C#
+- [x] Setup .NET SDK + VS Code + C# Dev Kit
+- [x] Premier projet console :
+    - [x] ```dotnet new console -n pixelConquest```
+        - [x] Création du dossier projet, sous-dossier obj, Program.cs & .csproj (équivalent package.json)
+    - [x] ```dotnet run```
+    - [x] Reopen du dossier dotnet via VSCode pour reconnaissance par le devkit
+    - [ ] Bases de la syntaxe C#
 - [ ] Domaine core : `Grid`, `Pixel`, `Color` — classes, records, interfaces
 - [ ] Pattern Strategy — classe abstraite + implémentations
 - [ ] Fenêtre Avalonia + game loop
