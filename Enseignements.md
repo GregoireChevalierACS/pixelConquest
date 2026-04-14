@@ -17,3 +17,5 @@ var pixel = new Pixel(3, 7);
 Ce qui donnera un pixel aux coordonnées X=3, Y=7.
 Champ : public int ClaimedBy = 0;
 Propriété : public int ClaimedBy { get; set; } = 0;
+Le constructeur ne prend pas le Dictionary en paramètre, c'est la Grid qui le crée elle-même en interne avec new Dictionary<int, int>()
+**Convention** : les paramètres du constructeur sont en camelCase (lengthX), les propriétés en PascalCase (LengthX)
