@@ -22,3 +22,7 @@ Le constructeur ne prend pas le Dictionary en paramètre, c'est la Grid qui le c
 Les paramètres du constructeur sont en camelCase (lengthX), les propriétés en PascalCase (LengthX)
 En C#, les propriétés avec { get; set; } se terminent par }. L'accolade fermante fait déjà office de fin de déclaration. Le ; supplémentaire est une erreur de syntaxe.
 Les ; terminent les instructions (assignations, appels de méthode...), pas les déclarations de membres.
+
+Une interface n'a pas de constructeur elle définit seulement un contrat (les méthodes que les classes qui l'implémentent devront avoir). C'est comme une signature TypeScript
+En C#, pas de mot-clé function juste le type de retour directement
+Dans une interface, pas de corps { } juste la signature suivie d'un ;

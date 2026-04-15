@@ -61,8 +61,21 @@ Implémentation envisagée : flood fill depuis les bords — tout pixel neutre n
         - [x] Création du dossier projet, sous-dossier obj, Program.cs & .csproj (équivalent package.json)
     - [x] ```dotnet run```
     - [x] Reopen du dossier dotnet via VSCode pour reconnaissance par le devkit
-    - [ ] Bases de la syntaxe C#
-- [ ] Domaine core : `Grid`, `Pixel`, `Color` — classes, records, interfaces
+    - [x] Bases de la syntaxe C#
+- [ ] Domaine core : 
+    - [x] `Grid`, 
+    - [x] `Pixel`, 
+    - [ ] interfaces 
+        - [x] Définition du besoin :
+        ```
+        IStrategy doit avoir :
+        Position NextMove(Grid grid)
+        List<Position> GetNeighbors(Position position, Grid grid)
+        List<Pixel> GetEncircledPixels(Grid grid)
+        ```
+    - [ ] `Color`,
+    - [ ]  classes,  
+    - [ ] records,  
 - [ ] Pattern Strategy — classe abstraite + implémentations
 - [ ] Fenêtre Avalonia + game loop
 - [ ] Pipeline de rendu SkiaSharp
