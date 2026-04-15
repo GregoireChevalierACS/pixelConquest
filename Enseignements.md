@@ -18,4 +18,7 @@ Ce qui donnera un pixel aux coordonnées X=3, Y=7.
 Champ : public int ClaimedBy = 0;
 Propriété : public int ClaimedBy { get; set; } = 0;
 Le constructeur ne prend pas le Dictionary en paramètre, c'est la Grid qui le crée elle-même en interne avec new Dictionary<int, int>()
-**Convention** : les paramètres du constructeur sont en camelCase (lengthX), les propriétés en PascalCase (LengthX)
+**Convention** : 
+Les paramètres du constructeur sont en camelCase (lengthX), les propriétés en PascalCase (LengthX)
+En C#, les propriétés avec { get; set; } se terminent par }. L'accolade fermante fait déjà office de fin de déclaration. Le ; supplémentaire est une erreur de syntaxe.
+Les ; terminent les instructions (assignations, appels de méthode...), pas les déclarations de membres.
