@@ -62,3 +62,42 @@ On aurait pu faire `Pixel[,]` (un objet par case). On a choisi `int[,]` où la v
 - **Vitesse** : lire `Cells[x,y]` (un `int`) est un accès mémoire direct. Lire `pixels[x,y].ClaimedBy` demande de suivre le pointeur vers l'objet puis lire son champ (déréférencement) — plus lent, surtout balayé à chaque frame de rendu.
 - **Redondance** : la classe `Pixel` portait `Coords` (X,Y) alors que la position dans le tableau donne déjà les coordonnées ; et `ClaimedBy` est un `int` → autant stocker directement l'`int`.
 Notion sous-jacente : en C#, `int` est un **type valeur** (struct, stocké directement dans le tableau), alors qu'une classe comme `Pixel` est un **type référence** (le tableau stocke un pointeur vers l'objet ailleurs en mémoire). Pour une grille dense et performante, les types valeur gagnent.
+
+**Pattern Strategy — classe abstraite `abstract`**
+Une classe `abstract` ne peut pas être instanciée directement (`new StrategyBase(...)` est interdit). Elle sert de **base commune** dont héritent des classes concrètes. Équivalent conceptuel des classes abstraites TS.
+```csharp
+abstract class StrategyBase : IStrategy { ... }
+```
+Le `: IStrategy` signifie "cette classe **implémente** l'interface" (comme `implements` en TS). En C#, la même syntaxe `:` sert pour l'héritage ET l'implémentation d'interface — le contexte fait la différence.
+
+**Méthodes `abstract` vs `virtual` vs normales**
+- `public abstract Position? NextMove(Grid grid);` → **pas de corps**, juste la signature. Oblige chaque classe fille à la définir. C'est le point de variation entre stratégies.
+- `public virtual List<Position> GetEncircledPixels(...) { ... }` → a un corps par défaut, mais une classe fille **peut** le remplacer (`override`).
+- `public List<Position> GetNeighbors(...) { ... }` → méthode normale, héritée telle quelle, non redéfinissable. Logique commune à toutes les stratégies.
+
+**Héritage et `override`**
+```csharp
+class RandomStrategy : StrategyBase
+{
+    public RandomStrategy(int id) : base(id) { }      // appelle le constructeur parent
+    public override Position? NextMove(Grid grid) { ... } // redéfinit la méthode abstraite
+}
+```
+- `: base(id)` dans le constructeur = appel du constructeur de la classe parente (équivalent `super(id)` en JS/TS).
+- `override` est **obligatoire** en C# pour redéfinir une méthode `abstract`/`virtual` (en JS on redéfinit sans mot-clé). C'est une sécurité : le compilateur vérifie qu'on redéfinit bien quelque chose qui existe.
+- **Polymorphisme** : c'est tout l'intérêt du pattern. On peut traiter n'importe quelle stratégie via le type `IStrategy` ou `StrategyBase` sans savoir laquelle c'est ; l'appel à `NextMove` exécute la bonne version. Ça permettra de faire tourner N stratégies différentes dans la même boucle.
+
+**Types nullable (`Position?`)**
+Avec `<Nullable>enable</Nullable>` dans le .csproj, les types référence sont **non-nullables par défaut** : retourner `null` sur un `Position` déclenche un avertissement. Le `?` (`Position?`) autorise explicitement `null`. Ici `NextMove` retourne `Position?` car il peut ne plus y avoir de coup possible.
+Côté appelant, on teste avec `if (move is null)`. Le `is null` est la façon idiomatique C# (plutôt que `== null`).
+C'est proche du `strictNullChecks` de TS : le compilateur t'oblige à gérer le cas `null` au lieu de le découvrir en plantant à l'exécution.
+
+**Divers rencontrés ici**
+- `new()` (target-typed new) : `Random _random = new();` — le type est déjà connu à gauche, inutile de le répéter à droite (`new Random()`). Sucre syntaxique C# 9+.
+- `readonly` : `private readonly Random _random` — le champ ne peut être assigné qu'à la déclaration ou dans le constructeur, jamais réassigné ensuite. Proche du `readonly` TS / d'un `const` de champ.
+- Convention : les champs privés sont préfixés d'un `_` (`_random`) — convention .NET très répandue.
+- Tuples et déstructuration : `(int dx, int dy)[] directions = { (0,-1), ... };` puis `foreach ((int dx, int dy) in directions)`. Les tuples permettent de grouper des valeurs sans créer de classe, et on peut les déstructurer comme en JS.
+- Interpolation de chaîne : `$"... {tick} ..."` — le `$` devant la chaîne active l'interpolation, `{}` insère une expression. Équivalent des template strings JS avec backticks.
+
+**Organisation des fichiers (piège rencontré)**
+Le SDK .NET compile automatiquement **tous les `.cs` situés sous le dossier du projet** (là où est le .csproj). Un dossier `Strategies/` placé *à côté* du projet (un niveau au-dessus) n'était **pas compilé** → erreur `CS0246 : type introuvable`. Solution : déplacer `Strategies/` **dans** `pixelConquest/`. Règle à retenir : tout le code source doit vivre sous le dossier du projet.

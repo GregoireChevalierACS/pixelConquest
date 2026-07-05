@@ -65,18 +65,21 @@ Implémentation envisagée : flood fill depuis les bords — tout pixel neutre n
 - [ ] Domaine core : 
     - [x] `Grid`, 
     - [x] `Pixel`, 
-    - [ ] interfaces 
+    - [x] interfaces (`IStrategy`)
         - [x] Définition du besoin :
         ```
         IStrategy doit avoir :
         Position NextMove(Grid grid)
         List<Position> GetNeighbors(Position position, Grid grid)
-        List<Pixel> GetEncircledPixels(Grid grid)
+        List<Position> GetEncircledPixels(Grid grid)
         ```
-    - [ ] `Color`,
-    - [ ]  classes,  
-    - [ ] records,  
-- [ ] Pattern Strategy — classe abstraite + implémentations
+    - [x] ~~`Color`~~ — abandonné : le domaine n'utilise que des IDs entiers (0 = neutre, 1/2/3… = stratégies). L'association `id → couleur` vivra dans la couche rendu (SkiaSharp fournit déjà `SKColor`). Décision YAGNI.
+    - [x] classes (`Grid`, `Pixel`)
+    - [x] records (`Position`)
+    - **Note archi** : stockage de la grille en `int[,] Cells` (tableau 2D dense) plutôt que `Dictionary` ou `Pixel[,]` — perf mémoire/accès pour le rendu et les flood-fills.
+- [x] Pattern Strategy — classe abstraite + implémentations
+    - [x] `StrategyBase` (abstraite) : `GetNeighbors` (4-connexité) commun, `NextMove` abstrait, `GetEncircledPixels` stub
+    - [x] `RandomStrategy` (concrète) : expansion aléatoire — 1re stratégie fonctionnelle, démo console OK
 - [ ] Fenêtre Avalonia + game loop
 - [ ] Pipeline de rendu SkiaSharp
 - [ ] Algorithme de détection d'encerclement
