@@ -13,3 +13,18 @@ D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\refint\pixelConquest.dll
 D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.pdb
 D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\pixelConquest.genruntimeconfig.cache
 D:\pixelConqiest\pixelConquest\obj\Debug\net10.0\ref\pixelConquest.dll
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\bin\Debug\net10.0\pixelConquest.exe
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\bin\Debug\net10.0\pixelConquest.deps.json
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\bin\Debug\net10.0\pixelConquest.runtimeconfig.json
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\bin\Debug\net10.0\pixelConquest.dll
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\bin\Debug\net10.0\pixelConquest.pdb
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\pixelConquest.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\pixelConquest.AssemblyInfoInputs.cache
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\pixelConquest.AssemblyInfo.cs
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\pixelConquest.csproj.CoreCompileInputs.cache
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\pixelConquest.sourcelink.json
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\pixelConquest.dll
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\refint\pixelConquest.dll
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\pixelConquest.pdb
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\pixelConquest.genruntimeconfig.cache
+c:\Users\FlowUP\Desktop\pixel conquest\pixelConquest\pixelConquest\obj\Debug\net10.0\ref\pixelConquest.dll

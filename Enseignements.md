@@ -26,3 +26,21 @@ Les ; terminent les instructions (assignations, appels de méthode...), pas les 
 Une interface n'a pas de constructeur elle définit seulement un contrat (les méthodes que les classes qui l'implémentent devront avoir). C'est comme une signature TypeScript
 En C#, pas de mot-clé function juste le type de retour directement
 Dans une interface, pas de corps { } juste la signature suivie d'un ;
+
+***5 Juillet 2026***
+
+**Interface `IStrategy`**
+Convention C# : les interfaces sont préfixées d'un `I` majuscule (`IStrategy`, `IEnumerable`, `IDisposable`). C'est purement conventionnel mais universel dans l'écosystème .NET — l'équivalent JS n'existe pas, on nommait juste `Strategy` en TS.
+```csharp
+interface IStrategy
+{
+    Position NextMove(Grid grid);
+    List<Position> GetNeighbors(Position position, Grid grid);
+    List<Pixel> GetEncircledPixels(Grid grid);
+}
+```
+Une méthode se déclare `TypeDeRetour NomMethode(TypeParam nomParam)`. Ici `Position NextMove(Grid grid)` = "une méthode `NextMove` qui prend une `Grid` et retourne une `Position`". L'ordre est inversé par rapport à TS où on écrirait `nextMove(grid: Grid): Position`.
+
+**`List<T>` — les génériques**
+`List<Position>` = une liste d'éléments de type `Position`. Le `<T>` (ici `<Position>` ou `<Pixel>`) est un **générique** : le type contenu est vérifié à la compilation. Équivalent TS de `Position[]` ou `Array<Position>`, mais en C# c'est fortement typé et la vérification est stricte (impossible d'y mettre un autre type).
+`List<T>` vit dans `System.Collections.Generic`, mais grâce à `<ImplicitUsings>enable</ImplicitUsings>` dans le .csproj, pas besoin de l'importer manuellement — c'est comme si les imports les plus courants étaient déjà faits globalement (équivalent d'un fichier de globals auto-importés).

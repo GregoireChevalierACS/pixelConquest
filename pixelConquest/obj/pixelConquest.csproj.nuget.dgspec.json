@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\pixelConqiest\\pixelConquest\\pixelConquest.csproj": {}
+    "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj": {}
   },
   "projects": {
-    "D:\\pixelConqiest\\pixelConquest\\pixelConquest.csproj": {
+    "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\pixelConqiest\\pixelConquest\\pixelConquest.csproj",
+        "projectUniqueName": "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj",
         "projectName": "pixelConquest",
-        "projectPath": "D:\\pixelConqiest\\pixelConquest\\pixelConquest.csproj",
-        "packagesPath": "C:\\Users\\Grégoire\\.nuget\\packages\\",
-        "outputPath": "D:\\pixelConqiest\\pixelConquest\\obj\\",
+        "projectPath": "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj",
+        "packagesPath": "C:\\Users\\FlowUP\\.nuget\\packages\\",
+        "outputPath": "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Grégoire\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\FlowUP\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -24,6 +24,7 @@
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -38,10 +39,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -59,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
