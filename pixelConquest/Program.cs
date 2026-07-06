@@ -1,68 +1,58 @@
 using pixelConquest;
 
-// --- Démo 1 : expansion aléatoire sur une grille (moteur de conquête) ---
-RunRandomExpansion();
+// --- Démo : 3 stratégies aléatoires s'affrontent sur la même grille ---
 
-// --- Démo 2 : détection d'encerclement (flood-fill depuis les bords) ---
-RunEncirclementDemo();
+Grid grid = new(30, 15);
 
-
-void RunRandomExpansion()
+List<StrategyBase> strategies = new()
 {
-    Grid grid = new(20, 10);
-    RandomStrategy strategy = new(id: 1);
-    grid.Cells[grid.LengthX / 2, grid.LengthY / 2] = strategy.Id;
+    new RandomStrategy(id: 1),
+    new RandomStrategy(id: 2),
+    new RandomStrategy(id: 3),
+};
 
-    int tick = 0;
-    while (strategy.NextMove(grid) is Position move)
+// Seeds : chaque stratégie démarre d'une zone distincte.
+grid.Cells[1, 1] = 1;
+grid.Cells[grid.LengthX - 2, 1] = 2;
+grid.Cells[grid.LengthX / 2, grid.LengthY - 2] = 3;
+
+Simulation sim = new(grid, strategies);
+int ticks = sim.Run();
+
+Console.WriteLine($"Partie terminée en {ticks} ticks.\n");
+PrintGrid(grid);
+
+// Décompte final du territoire de chaque stratégie.
+Console.WriteLine();
+Dictionary<int, int> counts = new();
+for (int x = 0; x < grid.LengthX; x++)
+{
+    for (int y = 0; y < grid.LengthY; y++)
     {
-        grid.Cells[move.X, move.Y] = strategy.Id;
-        tick++;
+        int owner = grid.Cells[x, y];
+        counts[owner] = counts.GetValueOrDefault(owner) + 1;
     }
-
-    Console.WriteLine($"[Démo 1] Expansion aléatoire terminée en {tick} ticks.\n");
-    PrintGrid(grid);
-    Console.WriteLine();
 }
 
-void RunEncirclementDemo()
+foreach (StrategyBase s in strategies)
 {
-    // Grille 7x7 : la stratégie 1 forme un anneau, laissant une poche
-    // neutre encerclée au centre. Un pixel neutre au bord reste libre.
-    Grid grid = new(7, 7);
-    RandomStrategy strategy = new(id: 1);
-
-    // Dessine un anneau de '1' de (2,2) à (4,4), centre (3,3) laissé neutre.
-    for (int x = 2; x <= 4; x++)
-    {
-        for (int y = 2; y <= 4; y++)
-        {
-            bool isRingBorder = x == 2 || x == 4 || y == 2 || y == 4;
-            if (isRingBorder)
-            {
-                grid.Cells[x, y] = strategy.Id;
-            }
-        }
-    }
-
-    Console.WriteLine("[Démo 2] Grille avec une poche encerclée au centre :");
-    PrintGrid(grid);
-
-    List<Position> encircled = strategy.GetEncircledPixels(grid);
-    Console.WriteLine($"\nPixels encerclés détectés : {encircled.Count}");
-    foreach (Position p in encircled)
-    {
-        Console.WriteLine($"  ({p.X}, {p.Y})");
-    }
+    Console.WriteLine($"Stratégie {s.Id} : {counts.GetValueOrDefault(s.Id)} pixels");
 }
+if (counts.GetValueOrDefault(0) > 0)
+{
+    Console.WriteLine($"Neutres restants : {counts[0]}");
+}
+
 
 void PrintGrid(Grid grid)
 {
+    // 0 = '.', sinon le chiffre de la stratégie.
     for (int y = 0; y < grid.LengthY; y++)
     {
         for (int x = 0; x < grid.LengthX; x++)
         {
-            Console.Write(grid.Cells[x, y] == 0 ? '.' : '#');
+            int owner = grid.Cells[x, y];
+            Console.Write(owner == 0 ? '.' : (char)('0' + owner));
         }
         Console.WriteLine();
     }

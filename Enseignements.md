@@ -126,3 +126,22 @@ Rencontré dans la boucle de simulation :
 while (strategy.NextMove(grid) is Position move) { ... utilise move ... }
 ```
 C'est du **pattern matching** avec déclaration de variable. `NextMove` retourne un `Position?`. Le motif `is Position move` est vrai seulement si le résultat n'est **pas null**, et dans ce cas il l'assigne à une nouvelle variable `move` (de type `Position` non-nullable, directement utilisable). Ça remplace élégamment le combo "appeler, stocker dans une variable, tester si null, déréférencer". Pas d'équivalent JS direct — c'est une force du système de types C#.
+
+**Records et égalité par valeur (crucial pour HashSet/Dictionary)**
+`Position` est un `record`. En C#, un `record` génère automatiquement l'**égalité par valeur** : deux `Position(3,3)` sont considérés égaux (`==` renvoie true) et produisent le **même hash code**. C'est différent d'une `class` classique dont l'égalité est par **référence** (deux objets distincts en mémoire ≠ même si contenu identique).
+Conséquence concrète : on peut mettre des `Position` dans un `HashSet<Position>` ou comme clé de `Dictionary`, et `Contains`/lookup marchent sur le **contenu** (x,y), pas sur l'identité de l'objet. Sans record, il aurait fallu écrire `Equals` + `GetHashCode` à la main. Analogie JS : en JS `{x:3,y:3} !== {x:3,y:3}` (comparaison par référence) et un `Set` ne dédoublonnerait pas ; le `record` C# résout ça nativement.
+
+**`HashSet<T>` — appartenance en O(1)**
+`HashSet<Position> encircledSet = new(encircled);` construit un ensemble à partir d'une liste. `encircledSet.Contains(p)` teste l'appartenance en temps constant (via hash), là où `List.Contains` serait O(n). Utilisé ici pour tester rapidement "cette case fait-elle partie de la poche encerclée ?". On l'utilise aussi comme mémo `visited` pour ne pas retraiter une case.
+
+**`Dictionary` : `GetValueOrDefault` et déstructuration**
+- `borderCount[cell] = borderCount.GetValueOrDefault(cell) + 1;` : `GetValueOrDefault(k)` renvoie la valeur si la clé existe, sinon la valeur par défaut du type (0 pour un `int`) — évite de gérer à part "la clé n'existe pas encore". Pattern classique pour compter des occurrences.
+- `foreach ((int id, int count) in borderCount)` : on itère un `Dictionary` en **déstructurant** directement chaque paire clé/valeur en deux variables. Chaque élément d'un `Dictionary` est une `KeyValuePair` déstructurable comme un tuple.
+
+**Architecture : séparer le moteur (`Simulation`) des stratégies**
+La classe `Simulation` orchestre la partie (elle détient la `Grid` + la `List<StrategyBase>`, fait les ticks, applique l'absorption). Les stratégies, elles, ne savent que répondre "quel est mon prochain coup ?". Cette séparation (orchestrateur vs acteurs) est la même logique que séparer un "game loop" de la logique des entités. Ça rendra le branchement de l'UI trivial : la fenêtre n'aura qu'à appeler `sim.Tick()` et lire `grid.Cells`.
+
+**Règle métier — absorption des poches encerclées**
+Algorithme en 2 temps :
+1. `GetEncircledPixels` donne TOUS les pixels encerclés (peu importe par qui). On les regroupe en **poches connexes** (encore un flood-fill, mais restreint à l'ensemble des encerclés).
+2. Pour chaque poche, on compte les pixels de **frontière** par stratégie (cases possédées adjacentes à la poche) → la stratégie majoritaire remplit toute la poche. Égalité tranchée par le plus petit ID (déterministe : un algo de simulation doit donner le même résultat à données égales).

@@ -83,4 +83,4 @@ Implémentation envisagée : flood fill depuis les bords — tout pixel neutre n
 - [ ] Fenêtre Avalonia + game loop
 - [ ] Pipeline de rendu SkiaSharp
 - [x] Algorithme de détection d'encerclement — flood-fill depuis les bords (`GetEncircledPixels`), validé sur cas anneau
-- [ ] Stratégies concurrentes multiples
+- [x] Stratégies concurrentes multiples — orchestrateur `Simulation` (tour par tour jusqu'à épuisement) + absorption des poches par la stratégie majoritaire sur la frontière
