@@ -208,3 +208,53 @@ C'est le même esprit que le pattern Strategy, poussé plus loin : au lieu d'une
 
 **Organisation Git — `.gitignore`**
 Ajouté un `.gitignore` pour exclure `bin/` et `obj/` (sorties de compilation régénérées à chaque build). On ne versionne **jamais** les artefacts de build — seulement le code source. Équivalent d'ignorer `node_modules/` et `dist/` en web.
+
+**Packages NuGet — les dépendances .NET**
+NuGet est le gestionnaire de packages de .NET (l'équivalent de npm). On ajoute une dépendance avec :
+```
+dotnet add <projet> package Avalonia
+```
+Ça inscrit une `<PackageReference Include="Avalonia" Version="12.0.5" />` dans le `.csproj` (≈ une ligne de `dependencies` dans package.json). Les packages sont mis en cache dans `~/.nuget/packages`. On a ajouté `Avalonia`, `Avalonia.Desktop` (support desktop) et `Avalonia.Themes.Fluent` (thème visuel). Bon à savoir : **Avalonia utilise SkiaSharp en interne** pour dessiner — il a été tiré automatiquement comme dépendance transitive (on le voit dans bin/ : `SkiaSharp.dll`). Donc "SkiaSharp" du README est bien présent, sous le capot d'Avalonia.
+
+**Avalonia — structure d'une app GUI**
+Avalonia est un framework UI cross-platform (Windows/Mac/Linux), très inspiré de WPF. Une app minimale se compose de :
+- `Program.cs` : le `Main` qui démarre l'app. `AppBuilder.Configure<App>().UsePlatformDetect().StartWithClassicDesktopLifetime(args)`. L'attribut `[STAThread]` sur `Main` est obligatoire sur Windows (modèle de thread des UI Windows).
+- `App.axaml` (+ `.axaml.cs`) : la classe application, qui charge le thème et crée la fenêtre principale.
+- `MainWindow.axaml` (+ `.axaml.cs`) : la fenêtre.
+
+**AXAML / XAML — décrire l'UI en balisage**
+Les fichiers `.axaml` décrivent l'interface en XML (le XAML d'Avalonia). C'est déclaratif, comme du HTML/JSX pour une UI native :
+```xml
+<DockPanel>
+    <Border DockPanel.Dock="Bottom">...</Border>
+    <Panel x:Name="GridHost" />
+</DockPanel>
+```
+- Chaque fichier `.axaml` est associé à une classe C# "code-behind" (`MainWindow.axaml.cs`) via `x:Class`. Le mot-clé `partial` sur la classe permet de répartir une même classe sur plusieurs fichiers (le XAML génère une part, le .cs l'autre).
+- `x:Name="GridHost"` nomme un élément → on le récupère côté C# avec `this.FindControl<Panel>("GridHost")`.
+- Panneaux de disposition : `DockPanel` (ancre des enfants sur les bords), `Panel` (superposition simple), etc. — analogues aux systèmes de layout CSS.
+
+**Dessin custom — `Control` + `Render(DrawingContext)`**
+Pour dessiner nous-mêmes (la grille), on hérite de `Control` et on surcharge `Render` :
+```csharp
+public override void Render(DrawingContext context) {
+    context.FillRectangle(brush, new Rect(x, y, w, h));
+}
+```
+- `DrawingContext` = la surface de dessin (≈ le context d'un `<canvas>` HTML).
+- `InvalidateVisual()` = "cette zone est périmée, redessine-la" → Avalonia rappellera `Render`. On l'appelle après chaque tick.
+- On mappe `id de stratégie → IBrush` (pinceau de couleur) une fois, puis on peint chaque case. `Color.TryParse("#RRGGBB", out var c)` convertit le hex du profil en couleur — c'est là que la couleur stockée en JSON devient un pixel à l'écran.
+
+**Game loop — `DispatcherTimer`**
+Pour animer, on utilise un `DispatcherTimer` (timer qui s'exécute sur le **thread UI**, donc on peut redessiner sans risque) :
+```csharp
+_timer.Interval = TimeSpan.FromMilliseconds(50); // ~20 ticks/seconde
+_timer.Tick += OnGameTick;                        // abonnement à l'événement
+_timer.Start();
+```
+- `_timer.Tick += OnGameTick;` : abonnement à un **événement** (les `event` C#, façon idiomatique d'écouter). `+=` ajoute un handler (comme `addEventListener`).
+- À chaque `Tick` : `sim.Tick()` (avance le moteur), puis `gridView.Redraw()` (redessine). Quand la partie est finie, `_timer.Stop()`.
+C'est LA séparation qu'on avait anticipée : le moteur (`Simulation`) ne connaît rien de l'UI ; l'UI se contente de l'appeler périodiquement et de lire `grid.Cells`.
+
+**`.csproj` pour une app Avalonia**
+Réglages ajoutés : `<OutputType>WinExe</OutputType>` (app fenêtrée sans console qui traîne — vs `Exe` pour la console), `<BuiltInComInteropSupport>true` (requis Windows), `<ApplicationManifest>app.manifest` (déclare le DPI-awareness pour un rendu net sur écrans haute résolution).
