@@ -82,5 +82,5 @@ Implémentation envisagée : flood fill depuis les bords — tout pixel neutre n
     - [x] `RandomStrategy` (concrète) : expansion aléatoire — 1re stratégie fonctionnelle, démo console OK
 - [ ] Fenêtre Avalonia + game loop
 - [ ] Pipeline de rendu SkiaSharp
-- [ ] Algorithme de détection d'encerclement
+- [x] Algorithme de détection d'encerclement — flood-fill depuis les bords (`GetEncircledPixels`), validé sur cas anneau
 - [ ] Stratégies concurrentes multiples

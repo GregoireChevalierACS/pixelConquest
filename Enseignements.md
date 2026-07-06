@@ -101,3 +101,28 @@ C'est proche du `strictNullChecks` de TS : le compilateur t'oblige à gérer le 
 
 **Organisation des fichiers (piège rencontré)**
 Le SDK .NET compile automatiquement **tous les `.cs` situés sous le dossier du projet** (là où est le .csproj). Un dossier `Strategies/` placé *à côté* du projet (un niveau au-dessus) n'était **pas compilé** → erreur `CS0246 : type introuvable`. Solution : déplacer `Strategies/` **dans** `pixelConquest/`. Règle à retenir : tout le code source doit vivre sous le dossier du projet.
+
+**Détection d'encerclement — flood-fill depuis les bords**
+Astuce algorithmique importante : plutôt que de chercher directement les zones "fermées" (dur), on cherche l'**inverse**. Un pixel neutre est *libre* s'il peut atteindre un bord du canvas en ne passant que par des neutres. Donc :
+1. on part de tous les neutres situés **sur un bord**,
+2. on propage (flood-fill) à travers les voisins neutres → ça marque tous les *libres*,
+3. tout neutre **non marqué** est forcément encerclé.
+C'est un classique : plus simple de calculer le complémentaire d'un ensemble que l'ensemble lui-même.
+
+**`Queue<T>` et le parcours BFS**
+Le flood-fill utilise une file d'attente `Queue<Position>` (structure FIFO : premier entré, premier sorti).
+```csharp
+Queue<Position> toVisit = new();
+toVisit.Enqueue(p);              // ajoute en fin de file
+Position current = toVisit.Dequeue(); // retire et renvoie le premier
+while (toVisit.Count > 0) { ... }     // tant qu'il reste des cases à traiter
+```
+Avec une `Queue`, on obtient un parcours **en largeur** (BFS) : on traite les cases proches avant les lointaines. (Une `Stack<T>` — LIFO — donnerait un parcours en profondeur/DFS ; pour un simple "atteindre tout", les deux marchent, le résultat est identique.)
+Le tableau `bool[,] reachable` sert de mémo pour ne pas repasser deux fois sur la même case (sinon boucle infinie). En C#, un `bool[,]` est initialisé à `false` partout automatiquement.
+
+**Pattern `while (... is Position move)`**
+Rencontré dans la boucle de simulation :
+```csharp
+while (strategy.NextMove(grid) is Position move) { ... utilise move ... }
+```
+C'est du **pattern matching** avec déclaration de variable. `NextMove` retourne un `Position?`. Le motif `is Position move` est vrai seulement si le résultat n'est **pas null**, et dans ce cas il l'assigne à une nouvelle variable `move` (de type `Position` non-nullable, directement utilisable). Ça remplace élégamment le combo "appeler, stocker dans une variable, tester si null, déréférencer". Pas d'équivalent JS direct — c'est une force du système de types C#.
