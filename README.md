@@ -65,19 +65,27 @@ Implémentation envisagée : flood fill depuis les bords — tout pixel neutre n
 - [ ] Domaine core : 
     - [x] `Grid`, 
     - [x] `Pixel`, 
-    - [ ] interfaces 
+    - [x] interfaces (`IStrategy`)
         - [x] Définition du besoin :
         ```
         IStrategy doit avoir :
         Position NextMove(Grid grid)
         List<Position> GetNeighbors(Position position, Grid grid)
-        List<Pixel> GetEncircledPixels(Grid grid)
+        List<Position> GetEncircledPixels(Grid grid)
         ```
-    - [ ] `Color`,
-    - [ ]  classes,  
-    - [ ] records,  
-- [ ] Pattern Strategy — classe abstraite + implémentations
+    - [x] ~~`Color`~~ — abandonné : le domaine n'utilise que des IDs entiers (0 = neutre, 1/2/3… = stratégies). L'association `id → couleur` vivra dans la couche rendu (SkiaSharp fournit déjà `SKColor`). Décision YAGNI.
+    - [x] classes (`Grid`, `Pixel`)
+    - [x] records (`Position`)
+    - **Note archi** : stockage de la grille en `int[,] Cells` (tableau 2D dense) plutôt que `Dictionary` ou `Pixel[,]` — perf mémoire/accès pour le rendu et les flood-fills.
+- [x] Pattern Strategy — classe abstraite + implémentations
+    - [x] `StrategyBase` (abstraite) : `GetNeighbors` (4-connexité) commun, `NextMove` abstrait, `GetEncircledPixels` (flood-fill)
+    - [x] `ProfiledStrategy` (concrète) : comportement unique piloté par un `StrategyProfile` (type + paramètres pondérés)
+- [x] Algorithme de détection d'encerclement — flood-fill depuis les bords (`GetEncircledPixels`), validé sur cas anneau
+- [x] Stratégies concurrentes multiples — orchestrateur `Simulation` (tour par tour jusqu'à épuisement) + absorption des poches par la stratégie majoritaire sur la frontière
+- [x] Personnalisation & configuration des stratégies
+    - [x] `StrategyType` (enum) : Random, Bfs, Greedy, Aggressive, Defensive
+    - [x] `StrategyProfile` (record) : nom, couleur, + 4 paramètres 0..1 (agressivité, aléatoire, encerclement, compacité)
+    - [x] `StrategyCatalog` : sauvegarde/chargement des profils en JSON (`strategies.json`)
+    - [x] `SimulationConfig` : taille du canvas + stratégies engagées ; `Simulation.FromConfig(...)`
 - [ ] Fenêtre Avalonia + game loop
 - [ ] Pipeline de rendu SkiaSharp
-- [ ] Algorithme de détection d'encerclement
-- [ ] Stratégies concurrentes multiples
