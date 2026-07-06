@@ -1,0 +1,11 @@
+# Build output
+bin/
+obj/
+
+# .NET user-specific files
+*.user
+*.suo
+
+# Rider / VS
+.idea/
+.vs/

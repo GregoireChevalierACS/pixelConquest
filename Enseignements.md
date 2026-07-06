@@ -145,3 +145,66 @@ La classe `Simulation` orchestre la partie (elle détient la `Grid` + la `List<S
 Algorithme en 2 temps :
 1. `GetEncircledPixels` donne TOUS les pixels encerclés (peu importe par qui). On les regroupe en **poches connexes** (encore un flood-fill, mais restreint à l'ensemble des encerclés).
 2. Pour chaque poche, on compte les pixels de **frontière** par stratégie (cases possédées adjacentes à la poche) → la stratégie majoritaire remplit toute la poche. Égalité tranchée par le plus petit ID (déterministe : un algo de simulation doit donner le même résultat à données égales).
+
+***6 Juillet 2026***
+
+**Enum**
+```csharp
+enum StrategyType { Random, Bfs, Greedy, Aggressive, Defensive }
+```
+Un `enum` est un type dont les valeurs sont une liste fixe de constantes nommées. En interne c'est un `int` (Random=0, Bfs=1…), mais on manipule les noms. Bien plus sûr que des "magic strings" ou des `int` bruts. Équivalent des enums TS. On peut faire du pattern matching dessus avec `switch`.
+
+**`record` en style "propriétés" + `init`**
+`StrategyProfile` est un `record` écrit avec un corps `{ }` (et non la forme courte `record Position(int X, int Y)`). Chaque propriété utilise `{ get; init; }` :
+```csharp
+public string Name { get; init; } = "Sans nom";
+```
+`init` (au lieu de `set`) = la propriété peut être assignée **uniquement à la création** de l'objet, puis devient en lecture seule → objet **immuable**. On les initialise avec la syntaxe *object initializer* :
+```csharp
+new StrategyProfile { Name = "Rusher", Type = StrategyType.Bfs, Randomness = 0.05 };
+```
+Immuabilité = plus sûr pour des données de config (personne ne peut muter un profil par accident). Proche d'un objet `readonly` en TS.
+
+**Expression `with` (copie non-destructive)**
+```csharp
+this with { Aggressiveness = Clamp01(Aggressiveness), ... }
+```
+`with` crée une **copie** d'un record en ne changeant que les champs listés, sans modifier l'original. Indispensable avec l'immuabilité : pour "modifier" un record, on en fabrique une version corrigée. Équivalent JS : `{ ...profile, aggressiveness: clamp(...) }` (le spread), mais typé.
+
+**Sérialisation JSON — `System.Text.Json`**
+La lib JSON est **native** en .NET (pas de package à installer), dans `System.Text.Json`.
+```csharp
+var options = new JsonSerializerOptions {
+    WriteIndented = true,                              // JSON lisible/indenté
+    Converters = { new JsonStringEnumConverter() },    // enums en texte, pas en nombre
+};
+string json = JsonSerializer.Serialize(profiles, options);          // objet → texte
+var list = JsonSerializer.Deserialize<List<StrategyProfile>>(json, options); // texte → objet
+```
+- Par défaut un enum se sérialise en **nombre** (`1`). Le `JsonStringEnumConverter` l'écrit en **texte** (`"Bfs"`) → fichier plus lisible et robuste si on réordonne l'enum.
+- La désérialisation renvoie un type **nullable** (`List<…>?`) car le JSON pourrait être `null`/invalide → on gère avec `?? new()`.
+- Les records avec `init` se désérialisent nativement (System.Text.Json sait remplir les propriétés `init`).
+
+**Fichiers — `System.IO`**
+- `File.Exists(path)`, `File.ReadAllText(path)`, `File.WriteAllText(path, content)` : lecture/écriture de fichier en une ligne.
+- `Path.Combine(a, b)` : assemble un chemin de façon portable (gère les `/` `\` selon l'OS). Ne jamais concaténer des chemins à la main.
+- `AppContext.BaseDirectory` : le dossier où tourne l'exécutable (ici `bin/Debug/...`). Pratique pour poser un fichier à côté de l'app.
+
+**LINQ (premier contact)**
+LINQ = des méthodes de requête sur les collections, très proche des méthodes de tableau JS :
+- `.Select(p => p.Clamped())` ≈ `.map()`
+- `.Where(p => ...)` ≈ `.filter()`
+- `.FirstOrDefault(predicate)` ≈ `.find()` (renvoie `null`/défaut si rien trouvé)
+- `.FindIndex(predicate)` ≈ `.findIndex()`
+- `.ToList()` : matérialise le résultat en `List<T>` (LINQ est "paresseux", il faut parfois forcer l'évaluation).
+`string.Equals(a, b, StringComparison.OrdinalIgnoreCase)` : comparaison de chaînes insensible à la casse (façon idiomatique C#, plutôt que `a.ToLower() == b.ToLower()`).
+
+**Conception : données vs comportement (le point clé de cette étape)**
+On a séparé :
+- `StrategyProfile` = **les données** (nom, couleur, type, paramètres). Sérialisable, sauvegardable, éditable.
+- `ProfiledStrategy` = **le comportement** (le code qui, à partir d'un profil, calcule `NextMove`).
+Une **seule** classe de comportement pilotée par un profil remplace 5 classes rigides. Le `NextMove` **score** chaque coup candidat en combinant les poids du *type* de base (via un `switch`) et les *paramètres* du profil. La diversité devient continue (des curseurs 0..1) au lieu de discrète.
+C'est le même esprit que le pattern Strategy, poussé plus loin : au lieu d'une classe par comportement, on a un comportement **paramétrable par la donnée**. Ça rendra l'UI simple (des sliders qui écrivent dans le profil).
+
+**Organisation Git — `.gitignore`**
+Ajouté un `.gitignore` pour exclure `bin/` et `obj/` (sorties de compilation régénérées à chaque build). On ne versionne **jamais** les artefacts de build — seulement le code source. Équivalent d'ignorer `node_modules/` et `dist/` en web.

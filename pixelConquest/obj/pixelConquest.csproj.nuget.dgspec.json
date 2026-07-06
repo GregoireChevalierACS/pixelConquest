@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj": {}
+    "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj": {
+    "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj",
+        "projectUniqueName": "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj",
         "projectName": "pixelConquest",
-        "projectPath": "C:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj",
+        "projectPath": "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj",
         "packagesPath": "C:\\Users\\FlowUP\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\obj\\",
+        "outputPath": "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\FlowUP\\AppData\\Roaming\\NuGet\\NuGet.Config"

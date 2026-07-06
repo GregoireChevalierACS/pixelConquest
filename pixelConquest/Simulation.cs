@@ -19,6 +19,44 @@ class Simulation
         Strategies = strategies;
     }
 
+    // Construit une simulation prête à jouer depuis une configuration :
+    // crée la grille, instancie une ProfiledStrategy par profil (Id = 1,2,3…),
+    // et place chaque seed (positions fournies, sinon réparties par défaut).
+    public static Simulation FromConfig(SimulationConfig config)
+    {
+        if (!config.IsValid(out string? error))
+        {
+            throw new ArgumentException($"Configuration invalide : {error}");
+        }
+
+        Grid grid = new(config.Width, config.Height);
+        List<StrategyBase> strategies = new();
+
+        for (int i = 0; i < config.Strategies.Count; i++)
+        {
+            int id = i + 1; // 0 est réservé aux pixels neutres
+            strategies.Add(new ProfiledStrategy(id, config.Strategies[i]));
+
+            Position seed = i < config.Seeds.Count
+                ? config.Seeds[i]
+                : DefaultSeed(i, config);
+
+            grid.Cells[seed.X, seed.Y] = id;
+        }
+
+        return new Simulation(grid, strategies);
+    }
+
+    // Seed par défaut : répartit les stratégies le long des bords, espacées.
+    private static Position DefaultSeed(int index, SimulationConfig config)
+    {
+        int count = config.Strategies.Count;
+        int x = (int)((index + 0.5) / count * config.Width);
+        x = Math.Clamp(x, 1, config.Width - 2);
+        int y = index % 2 == 0 ? 1 : config.Height - 2;
+        return new Position(x, y);
+    }
+
     // Un tick : chaque stratégie joue un coup (si elle peut), puis on absorbe les
     // poches nouvellement encerclées. Retourne false si plus aucune stratégie
     // n'a pu jouer (partie terminée).
