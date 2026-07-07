@@ -2,13 +2,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="pixelConquest.MenuView">
     <Panel Background="#1e1e22">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-            <TextBlock Text="Menu (à venir)" FontSize="24" Foreground="#f1faee"
-                       HorizontalAlignment="Center" />
-            <Button x:Name="CreateButton" Content="Créer une stratégie"
-                    HorizontalAlignment="Center" />
-            <Button x:Name="LaunchButton" Content="Lancer la simulation"
-                    HorizontalAlignment="Center" />
-        </StackPanel>
+        <Border MaxWidth="560" Margin="24" Padding="28"
+                Background="#26262c" CornerRadius="10"
+                VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <DockPanel>
+
+                <!-- Titre -->
+                <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,20">
+                    <TextBlock Text="pixelConquest" FontSize="28" FontWeight="Bold"
+                               Foreground="#f1faee" FontFamily="Consolas,monospace" />
+                    <TextBlock Text="Choisis les stratégies à faire s'affronter"
+                               Foreground="#8d99ae" FontSize="13" />
+                </StackPanel>
+
+                <!-- Réglages du canvas -->
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"
+                            Spacing="12" Margin="0,0,0,16">
+                    <TextBlock Text="Canvas :" Foreground="#dddddd"
+                               VerticalAlignment="Center" />
+                    <NumericUpDown x:Name="WidthInput" Value="80" Minimum="5" Maximum="500"
+                                   Increment="10" Width="110" />
+                    <TextBlock Text="×" Foreground="#dddddd" VerticalAlignment="Center" />
+                    <NumericUpDown x:Name="HeightInput" Value="50" Minimum="5" Maximum="500"
+                                   Increment="10" Width="110" />
+                </StackPanel>
+
+                <!-- Boutons d'action en bas -->
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal"
+                            Spacing="12" Margin="0,20,0,0">
+                    <Button x:Name="CreateButton" Content="+ Créer une stratégie"
+                            Padding="14,8" />
+                    <Button x:Name="LaunchButton" Content="▶ Lancer la simulation"
+                            Padding="14,8" HorizontalAlignment="Right"
+                            Background="#2a9d8f" Foreground="White" FontWeight="Bold" />
+                </StackPanel>
+
+                <!-- Message d'aide / erreur -->
+                <TextBlock x:Name="HintText" DockPanel.Dock="Bottom"
+                           Foreground="#e63946" FontSize="12" Margin="0,10,0,0"
+                           Text="" TextWrapping="Wrap" />
+
+                <!-- Liste des stratégies avec checkboxes -->
+                <Border Background="#1e1e22" CornerRadius="6" Padding="4"
+                        MinHeight="180" MaxHeight="260">
+                    <ScrollViewer>
+                        <ItemsControl x:Name="StrategyList" />
+                    </ScrollViewer>
+                </Border>
+
+            </DockPanel>
+        </Border>
     </Panel>
 </UserControl>

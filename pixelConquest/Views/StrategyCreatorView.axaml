@@ -2,11 +2,84 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="pixelConquest.StrategyCreatorView">
     <Panel Background="#1e1e22">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-            <TextBlock Text="Création de stratégie (à venir)" FontSize="24"
-                       Foreground="#f1faee" HorizontalAlignment="Center" />
-            <Button x:Name="BackButton" Content="← Retour au menu"
-                    HorizontalAlignment="Center" />
-        </StackPanel>
+        <Border MaxWidth="560" Margin="24" Padding="28"
+                Background="#26262c" CornerRadius="10"
+                VerticalAlignment="Center">
+            <StackPanel Spacing="14">
+
+                <TextBlock Text="Créer une stratégie" FontSize="24" FontWeight="Bold"
+                           Foreground="#f1faee" FontFamily="Consolas,monospace" />
+
+                <!-- Nom -->
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Nom" Foreground="#dddddd" />
+                    <TextBox x:Name="NameInput" PlaceholderText="Ex. Mon Agresseur" />
+                </StackPanel>
+
+                <!-- Type de comportement -->
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Comportement de base" Foreground="#dddddd" />
+                    <ComboBox x:Name="TypeInput" HorizontalAlignment="Stretch" />
+                </StackPanel>
+
+                <!-- Paramètres (sliders 0..1) -->
+                <TextBlock Text="Réglages (0 = min, 1 = max)" Foreground="#8d99ae"
+                           FontSize="12" Margin="0,4,0,0" />
+
+                <Grid ColumnDefinitions="150,*,40" RowDefinitions="Auto,Auto,Auto,Auto"
+                      RowSpacing="6">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Agressivité"
+                               Foreground="#dddddd" VerticalAlignment="Center" />
+                    <Slider Grid.Row="0" Grid.Column="1" x:Name="AggrSlider"
+                            Minimum="0" Maximum="1" Value="0" />
+                    <TextBlock Grid.Row="0" Grid.Column="2" x:Name="AggrValue"
+                               Text="0.0" Foreground="#8d99ae" VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Part d'aléatoire"
+                               Foreground="#dddddd" VerticalAlignment="Center" />
+                    <Slider Grid.Row="1" Grid.Column="1" x:Name="RandSlider"
+                            Minimum="0" Maximum="1" Value="0" />
+                    <TextBlock Grid.Row="1" Grid.Column="2" x:Name="RandValue"
+                               Text="0.0" Foreground="#8d99ae" VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Encerclement"
+                               Foreground="#dddddd" VerticalAlignment="Center" />
+                    <Slider Grid.Row="2" Grid.Column="1" x:Name="EncSlider"
+                            Minimum="0" Maximum="1" Value="0" />
+                    <TextBlock Grid.Row="2" Grid.Column="2" x:Name="EncValue"
+                               Text="0.0" Foreground="#8d99ae" VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Compacité"
+                               Foreground="#dddddd" VerticalAlignment="Center" />
+                    <Slider Grid.Row="3" Grid.Column="1" x:Name="CompSlider"
+                            Minimum="0" Maximum="1" Value="0.5" />
+                    <TextBlock Grid.Row="3" Grid.Column="2" x:Name="CompValue"
+                               Text="0.5" Foreground="#8d99ae" VerticalAlignment="Center" />
+                </Grid>
+
+                <!-- Couleur : palette + hex + aperçu -->
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Couleur" Foreground="#dddddd" />
+                    <WrapPanel x:Name="Palette" Orientation="Horizontal" />
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBox x:Name="HexInput" Width="120" Text="#888888" />
+                        <Border x:Name="ColorPreview" Width="36" Height="36"
+                                CornerRadius="4" Background="#888888" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Message d'erreur -->
+                <TextBlock x:Name="ErrorText" Foreground="#e63946" FontSize="12"
+                           Text="" TextWrapping="Wrap" />
+
+                <!-- Boutons -->
+                <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,6,0,0">
+                    <Button x:Name="BackButton" Content="Annuler" Padding="14,8" />
+                    <Button x:Name="SaveButton" Content="💾 Enregistrer" Padding="14,8"
+                            Background="#2a9d8f" Foreground="White" FontWeight="Bold" />
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
     </Panel>
 </UserControl>

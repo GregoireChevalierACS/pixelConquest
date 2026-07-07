@@ -258,3 +258,51 @@ C'est LA séparation qu'on avait anticipée : le moteur (`Simulation`) ne conna�
 
 **`.csproj` pour une app Avalonia**
 Réglages ajoutés : `<OutputType>WinExe</OutputType>` (app fenêtrée sans console qui traîne — vs `Exe` pour la console), `<BuiltInComInteropSupport>true` (requis Windows), `<ApplicationManifest>app.manifest` (déclare le DPI-awareness pour un rendu net sur écrans haute résolution).
+
+***7 Juillet 2026***
+
+**Navigation entre écrans (multi-vues)**
+Une app à plusieurs écrans (Splash → Menu → Création → Jeu) : la fenêtre contient un `ContentControl` dont on remplace la propriété `Content` par la vue courante.
+```csharp
+private void Navigate(Control view) => _host.Content = view;
+```
+Chaque écran est un `UserControl` (un composant réutilisable, ≈ un composant React). Les écrans ne se connaissent pas entre eux : ils **lèvent des événements** que la fenêtre écoute pour décider de la navigation. Ça garde les vues découplées.
+
+**Communication par événements (`event Action`)**
+Une vue signale une intention sans savoir qui l'écoute :
+```csharp
+public event Action? Finished;                       // sans donnée
+public event Action<SimulationConfig>? LaunchRequested; // avec une donnée
+...
+Finished?.Invoke();                 // déclenche l'événement (le ?. gère "aucun abonné")
+LaunchRequested?.Invoke(config);
+```
+Côté fenêtre, on s'abonne avec `+=` :
+```csharp
+menu.LaunchRequested += ShowGame;   // ShowGame(config) sera appelé
+```
+`Action` = un délégué (référence de méthode) sans retour ; `Action<T>` en prend un paramètre. C'est le mécanisme idiomatique C# pour du "callback"/pub-sub, l'équivalent d'émettre un event et d'y abonner un handler en JS.
+
+**Accessibilité `public` / `internal` (piège rencontré)**
+En C#, une classe sans modificateur est `internal` (visible seulement dans l'assembly). Les vues générées par AXAML sont `public`. Une méthode/événement `public` **ne peut pas exposer un type `internal`** → erreur `CS0051/CS0053 : accessibilité incohérente`. Comme les vues publiques manipulent nos types métier (`SimulationConfig`, `StrategyProfile`, `Simulation`…), il a fallu rendre **tout le domaine `public`**. Règle : la visibilité d'un type doit être ≥ celle de tout ce qui l'expose.
+
+**Construire des contrôles en code (vs XAML)**
+On peut créer l'UI en XAML (déclaratif) **ou** en C# (impératif). Pour des listes dynamiques (une ligne par stratégie, une pastille par couleur), le C# est plus pratique :
+```csharp
+CheckBox box = new() { IsChecked = true };
+Border swatch = new() { Width = 16, Height = 16, Background = HexBrush(hex) };
+StackPanel row = new() { Orientation = Orientation.Horizontal, Children = { box, swatch, label } };
+itemsControl.ItemsSource = items;   // on injecte la liste construite
+```
+`Thickness` (marges/paddings) et `CornerRadius` vivent dans le namespace racine `Avalonia` (pas `Avalonia.Layout`) — d'où un `using Avalonia;` nécessaire.
+
+**Contrôles de saisie utilisés**
+- `TextBox` (champ texte, `PlaceholderText` pour l'invite — `Watermark` est déprécié), `ComboBox` (liste déroulante ; `ItemsSource = Enum.GetValues<StrategyType>()` la remplit avec toutes les valeurs de l'enum), `Slider` (curseur 0..1), `NumericUpDown` (nombre avec flèches), `CheckBox`.
+- Écouter un changement de valeur : `slider.PropertyChanged += (_, e) => { if (e.Property == Slider.ValueProperty) ... }`. Les contrôles Avalonia exposent leurs propriétés comme des `AvaloniaProperty` statiques, qu'on compare pour filtrer l'événement.
+- `PointerPressed` = événement de clic (souris) sur n'importe quel contrôle → utilisé pour rendre les pastilles de couleur cliquables.
+
+**Colorpicker maison**
+Pas besoin du gros widget : une `WrapPanel` de `Border` colorés cliquables (palette) + un `TextBox` hex synchronisé avec un aperçu. `Color.TryParse("#RRGGBB", out var c)` valide et convertit la saisie. Simple, léger, dans le thème.
+
+**Dessin animé conditionnel (logo qui apparaît)**
+Le `PixelLogo` dessine un motif `int[,]` (pixel-art) et n'affiche que les N premiers pixels selon une progression `Reveal` (0..1). Un `DispatcherTimer` incrémente `Reveal` → effet d'apparition progressive. Un 2e timer (3s) lève `Finished` pour passer au menu. Rappel utile : le temps de démarrage à froid de `dotnet run` (compilation + lancement) s'ajoute avant l'affichage — pour tester le timing réel du splash, lancer l'`.exe` déjà compilé directement.

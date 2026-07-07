@@ -87,5 +87,10 @@ Implémentation envisagée : flood fill depuis les bords — tout pixel neutre n
     - [x] `StrategyProfile` (record) : nom, couleur, + 4 paramètres 0..1 (agressivité, aléatoire, encerclement, compacité)
     - [x] `StrategyCatalog` : sauvegarde/chargement des profils en JSON (`strategies.json`)
     - [x] `SimulationConfig` : taille du canvas + stratégies engagées ; `Simulation.FromConfig(...)`
-- [x] Fenêtre Avalonia + game loop — `MainWindow` + `DispatcherTimer` (50 ms/tick), barre d'état live
+- [x] Fenêtre Avalonia + game loop — `DispatcherTimer` (50 ms/tick), barre d'état live (dans `GameView`)
 - [x] Pipeline de rendu SkiaSharp — `GridView : Control` (via `Render`/`DrawingContext`, Skia sous Avalonia), couleurs des profils
+- [x] Interface multi-écrans (navigation via `ContentControl` + événements)
+    - [x] `SplashView` : logo pixel-art animé (`PixelLogo`), ~3s puis transition auto
+    - [x] `MenuView` : réglages canvas + liste des stratégies (checkboxes, pastilles couleur), boutons Créer / Lancer
+    - [x] `StrategyCreatorView` : nom + type + 4 sliders + colorpicker (palette + hex), enregistre dans le catalogue
+    - [x] `GameView` : rendu de la partie + retour menu

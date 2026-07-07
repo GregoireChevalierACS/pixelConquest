@@ -22,12 +22,14 @@ public class StrategyCatalog
         _path = path;
     }
 
-    // Charge les profils depuis le fichier. Si absent, laisse une liste vide.
+    // Charge les profils depuis le fichier. Si absent, amorce avec des profils
+    // de démo variés (et les sauvegarde) pour ne jamais démarrer à vide.
     public void Load()
     {
         if (!File.Exists(_path))
         {
-            Profiles = new();
+            Profiles = DefaultProfiles();
+            Save();
             return;
         }
 
@@ -38,6 +40,19 @@ public class StrategyCatalog
         // Clamp défensif : le fichier a pu être édité à la main hors bornes.
         Profiles = loaded?.Select(p => p.Clamped()).ToList() ?? new();
     }
+
+    // Profils de démonstration livrés au premier lancement.
+    private static List<StrategyProfile> DefaultProfiles() => new()
+    {
+        new StrategyProfile { Name = "Rusher", Type = StrategyType.Bfs,
+            Color = "#e63946", Randomness = 0.05, Compactness = 0.1 },
+        new StrategyProfile { Name = "Turtle", Type = StrategyType.Defensive,
+            Color = "#457b9d", Compactness = 0.95 },
+        new StrategyProfile { Name = "Predator", Type = StrategyType.Aggressive,
+            Color = "#2a9d8f", Aggressiveness = 0.8, Randomness = 0.1 },
+        new StrategyProfile { Name = "Chaos", Type = StrategyType.Random,
+            Color = "#f4a261", Randomness = 1.0 },
+    };
 
     // Écrit tous les profils dans le fichier.
     public void Save()
