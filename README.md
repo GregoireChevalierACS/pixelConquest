@@ -84,7 +84,7 @@ Implémentation envisagée : flood fill depuis les bords — tout pixel neutre n
 - [x] Stratégies concurrentes multiples — orchestrateur `Simulation` (tour par tour jusqu'à épuisement) + absorption des poches par la stratégie majoritaire sur la frontière
 - [x] Personnalisation & configuration des stratégies
     - [x] `StrategyType` (enum) : Random, Bfs, Greedy, Aggressive, Defensive
-    - [x] `StrategyProfile` (record) : nom, couleur, + 4 paramètres 0..1 (agressivité, aléatoire, encerclement, compacité)
+    - [x] `StrategyProfile` (record) : nom, couleur, + paramètres 0..1 (agressivité, aléatoire, encerclement, compacité, gros encerclements), biais centre/bord (-1..+1), et règles on/off (suivre le dernier pixel, lignes droites)
     - [x] `StrategyCatalog` : sauvegarde/chargement des profils en JSON (`strategies.json`)
     - [x] `SimulationConfig` : taille du canvas + stratégies engagées ; `Simulation.FromConfig(...)`
 - [x] Fenêtre Avalonia + game loop — `DispatcherTimer` (50 ms/tick), barre d'état live (dans `GameView`)

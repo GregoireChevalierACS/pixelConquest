@@ -27,13 +27,30 @@ public record StrategyProfile
     // Rester groupé/compact (défensif) vs s'étaler loin (offensif territorial).
     public double Compactness { get; init; } = 0.5;
 
-    // Ramène toutes les valeurs dans [0, 1] — garde-fou contre un JSON édité à la main.
+    // Curseur bipolaire d'attirance : -1 = vise les bords, 0 = neutre, +1 = vise le centre.
+    public double CenterEdgeBias { get; init; } = 0.0;
+
+    // Privilégie les coups qui referment de GRANDES zones (encerclements ambitieux).
+    public double BigEncirclement { get; init; } = 0.0;
+
+    // --- Règles de déplacement (on/off) ---
+
+    // Étend en priorité depuis le dernier pixel joué (progression "en serpent")
+    // plutôt que depuis n'importe quel pixel du territoire.
+    public bool FollowLastPixel { get; init; } = false;
+
+    // Tend à continuer dans la même direction que le coup précédent (lignes droites).
+    public bool PreferStraightLines { get; init; } = false;
+
+    // Ramène les valeurs dans leurs bornes — garde-fou contre un JSON édité à la main.
     public StrategyProfile Clamped() => this with
     {
         Aggressiveness = Clamp01(Aggressiveness),
         Randomness = Clamp01(Randomness),
         EncirclementPriority = Clamp01(EncirclementPriority),
         Compactness = Clamp01(Compactness),
+        CenterEdgeBias = Math.Clamp(CenterEdgeBias, -1.0, 1.0),
+        BigEncirclement = Clamp01(BigEncirclement),
     };
 
     private static double Clamp01(double v) => Math.Clamp(v, 0.0, 1.0);

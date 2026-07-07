@@ -53,6 +53,8 @@ public partial class StrategyCreatorView : UserControl
         BindSlider("RandSlider", "RandValue");
         BindSlider("EncSlider", "EncValue");
         BindSlider("CompSlider", "CompValue");
+        BindSlider("BigEncSlider", "BigEncValue");
+        BindSlider("BiasSlider", "BiasValue");
     }
 
     private void BindSlider(string sliderName, string labelName)
@@ -149,6 +151,10 @@ public partial class StrategyCreatorView : UserControl
             Randomness = this.FindControl<Slider>("RandSlider")!.Value,
             EncirclementPriority = this.FindControl<Slider>("EncSlider")!.Value,
             Compactness = this.FindControl<Slider>("CompSlider")!.Value,
+            BigEncirclement = this.FindControl<Slider>("BigEncSlider")!.Value,
+            CenterEdgeBias = this.FindControl<Slider>("BiasSlider")!.Value,
+            FollowLastPixel = this.FindControl<CheckBox>("FollowLastBox")!.IsChecked == true,
+            PreferStraightLines = this.FindControl<CheckBox>("StraightLinesBox")!.IsChecked == true,
         };
 
         _catalog.AddOrUpdate(profile);

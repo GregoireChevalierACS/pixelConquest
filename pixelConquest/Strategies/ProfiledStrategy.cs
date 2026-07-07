@@ -1,13 +1,18 @@
 namespace pixelConquest;
 
 // Stratégie unique pilotée par un StrategyProfile : le "type" fixe la logique
-// générale, les paramètres (0..1) pondèrent le score de chaque coup candidat.
+// générale, les paramètres pondèrent le score de chaque coup candidat.
 // Une seule classe couvre donc toute la diversité de comportements.
 public class ProfiledStrategy : StrategyBase
 {
     public StrategyProfile Profile { get; }
 
     private readonly Random _random;
+
+    // Mémoire d'état entre les ticks, pour les règles "suivre le dernier pixel"
+    // et "lignes droites".
+    private Position? _lastMove;
+    private (int dx, int dy)? _lastDirection;
 
     public ProfiledStrategy(int id, StrategyProfile profile, int? seed = null)
         : base(id)
@@ -18,8 +23,54 @@ public class ProfiledStrategy : StrategyBase
 
     public override Position? NextMove(Grid grid)
     {
-        // 1. Collecter les cases neutres adjacentes à mon territoire (candidats).
-        //    On déduplique via un HashSet (une case peut border plusieurs des miennes).
+        List<Position> candidates = CollectCandidates(grid);
+        if (candidates.Count == 0)
+        {
+            return null;
+        }
+
+        // Part d'aléatoire : avec proba = Randomness, on ignore le score.
+        Position chosen;
+        if (_random.NextDouble() < Profile.Randomness)
+        {
+            chosen = candidates[_random.Next(candidates.Count)];
+        }
+        else
+        {
+            chosen = PickBest(candidates, grid);
+        }
+
+        // Mémorise le coup et sa direction (par rapport au dernier) pour le prochain tick.
+        if (_lastMove is Position prev)
+        {
+            _lastDirection = (chosen.X - prev.X, chosen.Y - prev.Y);
+        }
+        _lastMove = chosen;
+
+        return chosen;
+    }
+
+    // Cases neutres adjacentes à mon territoire. Si "suivre le dernier pixel" est
+    // actif et que le dernier coup a encore des voisins libres, on s'y restreint.
+    private List<Position> CollectCandidates(Grid grid)
+    {
+        if (Profile.FollowLastPixel && _lastMove is Position last)
+        {
+            List<Position> local = new();
+            foreach (Position n in GetNeighbors(last, grid))
+            {
+                if (grid.Cells[n.X, n.Y] == 0)
+                {
+                    local.Add(n);
+                }
+            }
+            if (local.Count > 0)
+            {
+                return local;
+            }
+            // Sinon (impasse), on retombe sur l'ensemble du territoire ci-dessous.
+        }
+
         HashSet<Position> candidateSet = new();
         for (int x = 0; x < grid.LengthX; x++)
         {
@@ -40,20 +91,11 @@ public class ProfiledStrategy : StrategyBase
             }
         }
 
-        if (candidateSet.Count == 0)
-        {
-            return null;
-        }
+        return candidateSet.ToList();
+    }
 
-        List<Position> candidates = candidateSet.ToList();
-
-        // 2. Part d'aléatoire : avec proba = Randomness, on ignore le score.
-        if (_random.NextDouble() < Profile.Randomness)
-        {
-            return candidates[_random.Next(candidates.Count)];
-        }
-
-        // 3. Scorer chaque candidat, garder le meilleur (bruit léger pour départager).
+    private Position PickBest(List<Position> candidates, Grid grid)
+    {
         Position best = candidates[0];
         double bestScore = double.NegativeInfinity;
 
@@ -94,17 +136,51 @@ public class ProfiledStrategy : StrategyBase
             }
         }
 
-        // Poids de base selon le type de comportement.
         (double aggr, double encircle, double compact, double spread) = BaseWeights();
 
-        // On combine les poids de type avec les paramètres du profil (0..1).
         double score = 0.0;
         score += (aggr + Profile.Aggressiveness) * enemyNeighbors;
         score += (encircle + Profile.EncirclementPriority) * myNeighbors;
         score += (compact + Profile.Compactness) * myNeighbors;
         score += (spread + (1.0 - Profile.Compactness)) * neutralNeighbors;
 
+        // Gros encerclements : bonus supplémentaire fort pour les cases entourées
+        // de plein de pixels à moi (elles referment de grandes zones).
+        if (Profile.BigEncirclement > 0)
+        {
+            score += Profile.BigEncirclement * 3.0 * (myNeighbors * myNeighbors);
+        }
+
+        // Biais centre/bord : selon la position sur le canvas.
+        if (Profile.CenterEdgeBias != 0)
+        {
+            score += Profile.CenterEdgeBias * 2.0 * CenterAffinity(candidate, grid);
+        }
+
+        // Lignes droites : bonus si on continue dans la même direction qu'avant.
+        if (Profile.PreferStraightLines && _lastMove is Position prev
+            && _lastDirection is (int ldx, int ldy))
+        {
+            int dx = candidate.X - prev.X;
+            int dy = candidate.Y - prev.Y;
+            if (dx == ldx && dy == ldy)
+            {
+                score += 2.0;
+            }
+        }
+
         return score;
+    }
+
+    // Retourne +1 au centre exact du canvas, -1 dans les coins, ~0 à mi-chemin.
+    private static double CenterAffinity(Position p, Grid grid)
+    {
+        double cx = (grid.LengthX - 1) / 2.0;
+        double cy = (grid.LengthY - 1) / 2.0;
+        double dx = Math.Abs(p.X - cx) / (cx <= 0 ? 1 : cx);
+        double dy = Math.Abs(p.Y - cy) / (cy <= 0 ? 1 : cy);
+        double dist = (dx + dy) / 2.0; // 0 au centre, 1 au bord
+        return 1.0 - 2.0 * dist;       // +1 centre, -1 bord
     }
 
     // Chaque type de base incline le score dans une direction dominante.

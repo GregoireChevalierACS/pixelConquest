@@ -26,7 +26,7 @@
                 <TextBlock Text="Réglages (0 = min, 1 = max)" Foreground="#8d99ae"
                            FontSize="12" Margin="0,4,0,0" />
 
-                <Grid ColumnDefinitions="150,*,40" RowDefinitions="Auto,Auto,Auto,Auto"
+                <Grid ColumnDefinitions="150,*,40" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                       RowSpacing="6">
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Agressivité"
                                Foreground="#dddddd" VerticalAlignment="Center" />
@@ -55,7 +55,38 @@
                             Minimum="0" Maximum="1" Value="0.5" />
                     <TextBlock Grid.Row="3" Grid.Column="2" x:Name="CompValue"
                                Text="0.5" Foreground="#8d99ae" VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Gros encerclements"
+                               Foreground="#dddddd" VerticalAlignment="Center" />
+                    <Slider Grid.Row="4" Grid.Column="1" x:Name="BigEncSlider"
+                            Minimum="0" Maximum="1" Value="0" />
+                    <TextBlock Grid.Row="4" Grid.Column="2" x:Name="BigEncValue"
+                               Text="0.0" Foreground="#8d99ae" VerticalAlignment="Center" />
                 </Grid>
+
+                <!-- Biais centre / bord : curseur bipolaire -->
+                <StackPanel Spacing="2">
+                    <Grid ColumnDefinitions="*,Auto,*">
+                        <TextBlock Grid.Column="0" Text="◄ Viser les bords"
+                                   Foreground="#8d99ae" FontSize="12" />
+                        <TextBlock Grid.Column="1" x:Name="BiasValue" Text="0.0"
+                                   Foreground="#8d99ae" FontSize="12" Margin="8,0" />
+                        <TextBlock Grid.Column="2" Text="Viser le centre ►"
+                                   Foreground="#8d99ae" FontSize="12"
+                                   HorizontalAlignment="Right" />
+                    </Grid>
+                    <Slider x:Name="BiasSlider" Minimum="-1" Maximum="1" Value="0" />
+                </StackPanel>
+
+                <!-- Règles de déplacement -->
+                <StackPanel Spacing="4">
+                    <CheckBox x:Name="FollowLastBox"
+                              Content="Toujours partir du pixel précédent"
+                              Foreground="#dddddd" />
+                    <CheckBox x:Name="StraightLinesBox"
+                              Content="Faire des lignes droites"
+                              Foreground="#dddddd" />
+                </StackPanel>
 
                 <!-- Couleur : palette + hex + aperçu -->
                 <StackPanel Spacing="6">

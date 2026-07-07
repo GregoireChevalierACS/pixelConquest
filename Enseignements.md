@@ -306,3 +306,18 @@ Pas besoin du gros widget : une `WrapPanel` de `Border` colorés cliquables (pal
 
 **Dessin animé conditionnel (logo qui apparaît)**
 Le `PixelLogo` dessine un motif `int[,]` (pixel-art) et n'affiche que les N premiers pixels selon une progression `Reveal` (0..1). Un `DispatcherTimer` incrémente `Reveal` → effet d'apparition progressive. Un 2e timer (3s) lève `Finished` pour passer au menu. Rappel utile : le temps de démarrage à froid de `dotnet run` (compilation + lancement) s'ajoute avant l'affichage — pour tester le timing réel du splash, lancer l'`.exe` déjà compilé directement.
+
+**Mémoire d'état dans une stratégie (champs entre les ticks)**
+Certains comportements ("partir du dernier pixel", "lignes droites") ont besoin de se souvenir du coup précédent. On l'obtient avec des **champs d'instance** dans `ProfiledStrategy` :
+```csharp
+private Position? _lastMove;             // dernier pixel joué
+private (int dx, int dy)? _lastDirection; // dernier vecteur de déplacement
+```
+Comme la même instance de stratégie est réutilisée à chaque tick (elle vit dans la `Simulation`), ces champs persistent d'un appel de `NextMove` au suivant. C'est de l'**état mutable** local à l'objet — l'inverse de l'immuabilité du `StrategyProfile` (données figées), et c'est normal : le profil décrit *ce que veut* la stratégie, l'état décrit *où elle en est*.
+Deux façons de l'exploiter : soit **filtrer les candidats** (FollowLastPixel restreint les coups aux voisins du dernier pixel), soit **pondérer le score** (PreferStraightLines bonifie les coups qui continuent `_lastDirection`).
+
+**Paramètre bipolaire vs 0..1**
+La plupart des réglages sont dans `[0, 1]`. Le biais centre/bord est **bipolaire** `[-1, +1]` : une seule valeur exprime deux tendances opposées (négatif = bords, positif = centre, 0 = neutre). Pratique quand deux options s'excluent — un seul curseur au lieu de deux. Le clamp devient `Math.Clamp(v, -1, 1)`.
+
+**Effet non-linéaire (au carré)**
+Pour "gros encerclements", le bonus est `myNeighbors * myNeighbors` (au carré) plutôt que linéaire : une case entourée de 4 pixels à moi vaut *bien plus* que 4× une case entourée d'1 seul. Élever au carré **exagère** les cas extrêmes → la stratégie privilégie fortement les coups qui referment vraiment de grandes zones, pas juste qui grignotent.

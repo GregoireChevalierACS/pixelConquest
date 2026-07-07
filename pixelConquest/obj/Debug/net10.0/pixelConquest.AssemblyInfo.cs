@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("pixelConquest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+27d554bbcf17cb861354afa64a306377c133ea79")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0166c89e94c760a3ac297f3fd2614c86d556f2e7")]
 [assembly: System.Reflection.AssemblyProductAttribute("pixelConquest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("pixelConquest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
