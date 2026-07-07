@@ -3,7 +3,7 @@ namespace pixelConquest;
 // Stratégie unique pilotée par un StrategyProfile : le "type" fixe la logique
 // générale, les paramètres (0..1) pondèrent le score de chaque coup candidat.
 // Une seule classe couvre donc toute la diversité de comportements.
-class ProfiledStrategy : StrategyBase
+public class ProfiledStrategy : StrategyBase
 {
     public StrategyProfile Profile { get; }
 

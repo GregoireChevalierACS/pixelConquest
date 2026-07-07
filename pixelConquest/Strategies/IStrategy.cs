@@ -1,6 +1,6 @@
 namespace pixelConquest;
 
-interface IStrategy
+public interface IStrategy
 {
     Position? NextMove(Grid grid);
     List<Position> GetNeighbors(Position position, Grid grid);

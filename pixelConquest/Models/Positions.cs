@@ -1,3 +1,3 @@
 namespace pixelConquest;
 
-record Position(int X, int Y);
+public record Position(int X, int Y);

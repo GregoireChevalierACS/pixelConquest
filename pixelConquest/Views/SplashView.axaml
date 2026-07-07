@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:pixelConquest"
+             x:Class="pixelConquest.SplashView">
+    <Panel Background="#1e1e22">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="24">
+
+            <!-- Logo pixel-art dessiné par le contrôle custom -->
+            <local:PixelLogo x:Name="Logo" Width="360" Height="200" />
+
+            <TextBlock Text="pixelConquest"
+                       FontSize="42" FontWeight="Bold"
+                       Foreground="#f1faee"
+                       FontFamily="Consolas,monospace"
+                       HorizontalAlignment="Center" />
+
+            <TextBlock Text="conquête territoriale, pixel par pixel"
+                       FontSize="15"
+                       Foreground="#8d99ae"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
+    </Panel>
+</UserControl>

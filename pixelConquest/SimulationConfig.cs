@@ -2,7 +2,7 @@ namespace pixelConquest;
 
 // Paramètres d'une partie à lancer : dimensions du canvas et stratégies engagées.
 // Sérialisable pour sauvegarder/rejouer une configuration.
-record SimulationConfig
+public record SimulationConfig
 {
     public int Width { get; init; } = 30;
     public int Height { get; init; } = 15;

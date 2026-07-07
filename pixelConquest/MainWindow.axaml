@@ -4,15 +4,6 @@
         Title="pixelConquest"
         Width="900" Height="600"
         Background="#1e1e22">
-
-    <DockPanel>
-        <!-- Barre d'état en bas : tick + score -->
-        <Border DockPanel.Dock="Bottom" Background="#2a2a30" Padding="10,6">
-            <TextBlock x:Name="StatusText" Foreground="#dddddd"
-                       FontFamily="Consolas,monospace" Text="Prêt." />
-        </Border>
-
-        <!-- Zone de rendu de la grille -->
-        <Panel x:Name="GridHost" Margin="10" />
-    </DockPanel>
+    <!-- Hôte de navigation : son contenu est remplacé par la vue courante -->
+    <ContentControl x:Name="ViewHost" />
 </Window>

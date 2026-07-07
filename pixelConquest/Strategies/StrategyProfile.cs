@@ -3,7 +3,7 @@ namespace pixelConquest;
 // Définition (données) d'une stratégie personnalisée, indépendante de son
 // comportement. Sérialisable en JSON pour sauvegarde/chargement.
 // Les 4 paramètres sont bornés à [0, 1] et pondèrent le comportement de base.
-record StrategyProfile
+public record StrategyProfile
 {
     public string Name { get; init; } = "Sans nom";
 

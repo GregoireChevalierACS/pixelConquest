@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="pixelConquest.MenuView">
+    <Panel Background="#1e1e22">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+            <TextBlock Text="Menu (à venir)" FontSize="24" Foreground="#f1faee"
+                       HorizontalAlignment="Center" />
+            <Button x:Name="CreateButton" Content="Créer une stratégie"
+                    HorizontalAlignment="Center" />
+            <Button x:Name="LaunchButton" Content="Lancer la simulation"
+                    HorizontalAlignment="Center" />
+        </StackPanel>
+    </Panel>
+</UserControl>

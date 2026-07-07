@@ -2,7 +2,7 @@ namespace pixelConquest;
 
 // Orchestrateur du jeu : détient la grille et les stratégies, fait avancer la
 // partie tick par tick, et applique l'absorption des poches encerclées.
-class Simulation
+public class Simulation
 {
     public Grid Grid { get; }
     public List<StrategyBase> Strategies { get; }

@@ -2,7 +2,7 @@ namespace pixelConquest;
 
 // Les comportements de base disponibles. Le "type" fixe la logique générale ;
 // les paramètres du StrategyProfile la nuancent ensuite.
-enum StrategyType
+public enum StrategyType
 {
     Random,     // choisit un voisin libre au hasard
     Bfs,        // expansion en largeur, vague régulière

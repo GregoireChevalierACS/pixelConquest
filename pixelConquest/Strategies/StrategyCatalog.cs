@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace pixelConquest;
 
 // Persistance des profils de stratégie dans un unique fichier catalogue JSON.
-class StrategyCatalog
+public class StrategyCatalog
 {
     private readonly string _path;
 

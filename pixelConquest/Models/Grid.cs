@@ -1,6 +1,6 @@
 namespace pixelConquest;
 
-class Grid
+public class Grid
 {
     public int[,] Cells { get; set; }
     public int LengthX { get; set; }

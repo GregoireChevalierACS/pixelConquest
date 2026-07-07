@@ -1,6 +1,6 @@
 namespace pixelConquest;
 
-abstract class StrategyBase : IStrategy
+public abstract class StrategyBase : IStrategy
 {
     // ID de la stratégie (1, 2, 3…). C'est la valeur écrite dans Grid.Cells
     // pour marquer les pixels conquis par cette stratégie.

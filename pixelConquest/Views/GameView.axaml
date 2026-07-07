@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="pixelConquest.GameView">
+    <DockPanel>
+        <!-- Barre du haut : bouton retour -->
+        <Border DockPanel.Dock="Top" Background="#2a2a30" Padding="10,6">
+            <Button x:Name="BackButton" Content="← Menu" />
+        </Border>
+
+        <!-- Barre d'état en bas : tick + scores -->
+        <Border DockPanel.Dock="Bottom" Background="#2a2a30" Padding="10,6">
+            <TextBlock x:Name="StatusText" Foreground="#dddddd"
+                       FontFamily="Consolas,monospace" Text="Prêt." />
+        </Border>
+
+        <!-- Zone de rendu de la grille -->
+        <Panel x:Name="GridHost" Margin="10" />
+    </DockPanel>
+</UserControl>
