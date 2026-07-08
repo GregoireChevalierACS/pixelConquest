@@ -31,6 +31,7 @@ public partial class MainWindow : Window
     {
         MenuView menu = new();
         menu.CreateStrategyRequested += ShowStrategyCreator;
+        menu.EditStrategyRequested += ShowStrategyEditor;
         menu.LaunchRequested += ShowGame;
         Navigate(menu);
     }
@@ -41,6 +42,15 @@ public partial class MainWindow : Window
         StrategyCreatorView creator = new();
         // Retour au menu après sauvegarde ou annulation.
         creator.Done += ShowMenu;
+        Navigate(creator);
+    }
+
+    // --- Écran de création en mode édition d'une stratégie existante ---
+    private void ShowStrategyEditor(StrategyProfile profile)
+    {
+        StrategyCreatorView creator = new();
+        creator.Done += ShowMenu;
+        creator.LoadForEdit(profile);
         Navigate(creator);
     }
 

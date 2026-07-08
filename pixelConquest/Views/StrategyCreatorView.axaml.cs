@@ -14,6 +14,10 @@ public partial class StrategyCreatorView : UserControl
 
     private readonly StrategyCatalog _catalog;
 
+    // Nom du profil en cours d'édition (null = création d'une nouvelle stratégie).
+    // Sert à supprimer l'ancien profil si l'utilisateur renomme.
+    private string? _editingOriginalName;
+
     // Palette de couleurs proposées (cliquables).
     private static readonly string[] PaletteColors =
     {
@@ -37,6 +41,29 @@ public partial class StrategyCreatorView : UserControl
 
         this.FindControl<Button>("BackButton")!.Click += (_, _) => Done?.Invoke();
         this.FindControl<Button>("SaveButton")!.Click += OnSave;
+    }
+
+    // Bascule l'écran en mode édition : pré-remplit tous les champs avec le profil
+    // et retient son nom d'origine pour gérer un éventuel renommage.
+    public void LoadForEdit(StrategyProfile profile)
+    {
+        _editingOriginalName = profile.Name;
+
+        this.FindControl<TextBlock>("TitleText")!.Text = "Modifier la stratégie";
+        this.FindControl<TextBox>("NameInput")!.Text = profile.Name;
+        this.FindControl<ComboBox>("TypeInput")!.SelectedItem = profile.Type;
+
+        this.FindControl<Slider>("AggrSlider")!.Value = profile.Aggressiveness;
+        this.FindControl<Slider>("RandSlider")!.Value = profile.Randomness;
+        this.FindControl<Slider>("EncSlider")!.Value = profile.EncirclementPriority;
+        this.FindControl<Slider>("CompSlider")!.Value = profile.Compactness;
+        this.FindControl<Slider>("BigEncSlider")!.Value = profile.BigEncirclement;
+        this.FindControl<Slider>("BiasSlider")!.Value = profile.CenterEdgeBias;
+
+        this.FindControl<CheckBox>("FollowLastBox")!.IsChecked = profile.FollowLastPixel;
+        this.FindControl<CheckBox>("StraightLinesBox")!.IsChecked = profile.PreferStraightLines;
+
+        SetColor(profile.Color);
     }
 
     private void SetupTypeCombo()
@@ -156,6 +183,13 @@ public partial class StrategyCreatorView : UserControl
             FollowLastPixel = this.FindControl<CheckBox>("FollowLastBox")!.IsChecked == true,
             PreferStraightLines = this.FindControl<CheckBox>("StraightLinesBox")!.IsChecked == true,
         };
+
+        // Édition avec renommage : retirer l'ancien profil pour ne pas le dupliquer.
+        if (_editingOriginalName is string original
+            && !string.Equals(original, name, StringComparison.OrdinalIgnoreCase))
+        {
+            _catalog.Remove(original);
+        }
 
         _catalog.AddOrUpdate(profile);
         _catalog.Save();

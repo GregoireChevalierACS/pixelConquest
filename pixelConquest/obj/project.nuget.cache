@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RSPZFLDyeVo=",
+  "dgSpecHash": "5e4xsjPORqE=",
   "success": true,
-  "projectFilePath": "c:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj",
+  "projectFilePath": "C:\\Users\\FlowUP\\Desktop\\pixel conquest\\pixelConquest\\pixelConquest\\pixelConquest.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\FlowUP\\.nuget\\packages\\avalonia\\12.0.5\\avalonia.12.0.5.nupkg.sha512",
     "C:\\Users\\FlowUP\\.nuget\\packages\\avalonia.angle.windows.natives\\2.1.27548.20260419\\avalonia.angle.windows.natives.2.1.27548.20260419.nupkg.sha512",

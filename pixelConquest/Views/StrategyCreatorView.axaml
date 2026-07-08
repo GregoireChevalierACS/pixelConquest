@@ -7,7 +7,8 @@
                 VerticalAlignment="Center">
             <StackPanel Spacing="14">
 
-                <TextBlock Text="Créer une stratégie" FontSize="24" FontWeight="Bold"
+                <TextBlock x:Name="TitleText" Text="Créer une stratégie"
+                           FontSize="24" FontWeight="Bold"
                            Foreground="#f1faee" FontFamily="Consolas,monospace" />
 
                 <!-- Nom -->

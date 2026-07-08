@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
@@ -11,6 +12,9 @@ public partial class MenuView : UserControl
 {
     public event Action? CreateStrategyRequested;
     public event Action<SimulationConfig>? LaunchRequested;
+
+    // Levé quand l'utilisateur clique le nom d'une stratégie pour la modifier.
+    public event Action<StrategyProfile>? EditStrategyRequested;
 
     private readonly StrategyCatalog _catalog;
 
@@ -66,12 +70,17 @@ public partial class MenuView : UserControl
                 Margin = new Thickness(8, 0, 8, 0),
             };
 
+            // Le nom est cliquable pour éditer la stratégie (souligné + curseur main).
             TextBlock label = new()
             {
                 Text = $"{profile.Name}",
                 Foreground = Brushes.White,
                 VerticalAlignment = VerticalAlignment.Center,
+                TextDecorations = TextDecorations.Underline,
+                Cursor = new Cursor(StandardCursorType.Hand),
             };
+            StrategyProfile captured = profile; // capture pour la lambda
+            label.PointerPressed += (_, _) => EditStrategyRequested?.Invoke(captured);
 
             TextBlock type = new()
             {
@@ -81,11 +90,19 @@ public partial class MenuView : UserControl
                 VerticalAlignment = VerticalAlignment.Center,
             };
 
+            TextBlock editHint = new()
+            {
+                Text = "  ✎",
+                Foreground = Brush.Parse("#8d99ae"),
+                FontSize = 12,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+
             StackPanel row = new()
             {
                 Orientation = Orientation.Horizontal,
                 Margin = new Thickness(6, 4, 6, 4),
-                Children = { box, swatch, label, type },
+                Children = { box, swatch, label, type, editHint },
             };
 
             items.Add(row);

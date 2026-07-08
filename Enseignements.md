@@ -321,3 +321,16 @@ La plupart des réglages sont dans `[0, 1]`. Le biais centre/bord est **bipolair
 
 **Effet non-linéaire (au carré)**
 Pour "gros encerclements", le bonus est `myNeighbors * myNeighbors` (au carré) plutôt que linéaire : une case entourée de 4 pixels à moi vaut *bien plus* que 4× une case entourée d'1 seul. Élever au carré **exagère** les cas extrêmes → la stratégie privilégie fortement les coups qui referment vraiment de grandes zones, pas juste qui grignotent.
+
+**Réutiliser une vue en deux modes (création / édition)**
+Le même `StrategyCreatorView` sert à créer ET à modifier une stratégie. Le mode édition = une méthode publique `LoadForEdit(profile)` qui **pré-remplit** tous les champs et retient le nom d'origine (`_editingOriginalName`). Deux vues auraient dupliqué le code ; une seule vue paramétrable est plus DRY.
+Point subtil du **renommage** : si l'utilisateur change le nom en éditant, il faut supprimer l'ancien profil (`_catalog.Remove(original)`) avant d'ajouter le nouveau, sinon on se retrouve avec deux entrées. Quand le nom ne change pas, `AddOrUpdate` (unicité par nom) fait la mise à jour en place.
+
+**Capture de variable dans une lambda (piège classique)**
+En construisant les lignes du menu dans une boucle, chaque nom cliquable doit se souvenir de SON profil :
+```csharp
+StrategyProfile captured = profile; // copie locale
+label.PointerPressed += (_, _) => EditStrategyRequested?.Invoke(captured);
+```
+On copie `profile` dans une variable locale à l'itération (`captured`) avant de l'utiliser dans la lambda. C'est le même piège qu'en JS avec `var` dans une boucle : sans copie locale, toutes les lambdas risqueraient de partager la même référence. Ici la variable de boucle `foreach`/`for` est déjà relativement sûre en C# moderne, mais la copie explicite rend l'intention claire et évite tout doute.
+`TextDecorations.Underline` + `Cursor = Hand` sur un `TextBlock` = signaux visuels d'élément cliquable (comme un lien).
